@@ -1,6 +1,47 @@
 # WordGeneratorAPI
-Generates nearest words based on provided dictionary 
-Exposes two endpoints:
+API to generate nearest words based on provided dictionary.
 
+To run in command line:
+python core.py 
+will run in localhost on port 7777
+
+And from postman you can send it API requests:
 # API 1: Takes in a link for the dictionary file and loads it into the memory. 
+POST http://127.0.0.1:7777/dictionary?dictionary_url=https://raw.githubusercontent.com/dwyl/english-words/master/words.txt 
 # API 2: Takes in 3 parameters: word, delta, and number to generate a list of response words.
+GET http://127.0.0.1:7777/nearestWord?word=car&delta=1&number=5 
+
+Notes while implementing:
+
+''' Ideas for word generation:
+    1) leveistein automata, modify to find exact n away. Or use this to prune the search space. 
+    2) graph representation, where weight of edge is edit distance - graph generation is expensive, calculation from there is cheaper. 
+    What if input word is not in the given dictionary? Find closest word based on edit distance.
+    3) range based, sort input accoridng to length. Proof of correctness: 
+    4) brute force: for every word in dictionary, calculate edit distance. Terminate early if we got 'number' amount of words delta edit distance away from intput 'word'
+    5) Use brute force to test correctness of improved solution
+'''
+
+''' Assumptions for design:
+    1) Global dictionary, uploading new dictionary will overrite previous dictionary.
+    2) Assuming that case does not matter-convert dictionary and input word to lower case. 
+    3) Assuming finding nearest words (API 2), will be called more often than load dictionary (API 1). So, we can optimize design for API 2.
+    4) Dictionary/trie is not user specific, and is shared by all connections.
+    5) Single threaded.
+    6) If we can not find enough number of words exactly delta away from input word, API 2 returns how many ever possible, with a flag (found_number_words) to indicate if it found required matches (true if it did).
+    7) nearest words returned are in alphabetical ordering
+'''
+
+''' Performance breakdown:
+    Brute force solution: According to the source code for the editdistance library that I am use (https://github.com/aflc/editdistance/blob/master/editdistance/_editdistance.cpp), 
+    for the worst case input they use edit_distance_dp, which is the dynamic programming way to solve edit ditstance. Which has a time complexity and space complexity of
+    O(m*n). Where m and n are the strings being compared. In the worst case the bruteNearestWord method will go over all dictionary words, lets say d. So our time complexiy would 
+    be O(m*n*d), in the worst case O(d*(s)^2), where s is max length of word.
+
+    Improved (current solution): Based on the dp solution of edit distance, we can see that the table that is built, can be reused for a word with the same prefix. \
+    For example with car as the input, and comparing it with arc we create a levenshtein distance table, and when we compare car with arcs, we can reuse this table and simply
+    fill in the last row.
+    Using a trie to store our dictionary, all shared prefixes in the dictionary are collaped into a single path,
+    so we can process them in the best order for building up the levenshtein tables one row at a time.
+    The upper bound for the runtime is O(<max word length> * <number of nodes in the trie>). 
+'''

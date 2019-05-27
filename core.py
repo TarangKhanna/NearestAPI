@@ -42,8 +42,8 @@ import editdistance # used for brute force solution
 
 # Modified improved solution is based on: http://stevehanov.ca/blog/index.php?id=114
 
-# Change to a better index, to improve performance. Trie for example or sort list on length.
 # This is not thread safe. To handle multiple clients flask would do multi threading. Run single threaded or move to redis, database, etc.
+# for brute force solution
 # DICTIONARY = []
 
 app = Flask(__name__)
@@ -70,7 +70,7 @@ trieExists = False
 
 def abort_if_no_trie():
     if not trieExists:
-        abort(404, message="Dictionary not provided. Use /dictionary with dictionary_url in your query. Then retry this endpoint.")
+        abort(404, message="Dictionary not provided. Post to /dictionary with dictionary_url in your query. Then retry this endpoint.")
     
 def search(word, maxCost, maxResults):
     abort_if_no_trie()
@@ -86,13 +86,14 @@ def search(word, maxCost, maxResults):
     for letter in trie.children:
         if searchRecursive(trie.children[letter], letter, word, currentRow, 
             results, maxCost, maxResults, resultCount):
+            # terminate search if maxresults found
             return results
     
     return results
 
 # This recursive helper is used by the search function above. It assumes that
 # the previousRow has been filled in already.
-# returns boolean, if true, then we have found 
+# returns boolean, if true, then we have found the number of nearest words requested.
 def searchRecursive(node, letter, word, previousRow, results, maxCost, maxResults, resultCount):
     columns = len(word) + 1
     currentRow = [previousRow[0] + 1]
@@ -119,7 +120,7 @@ def searchRecursive(node, letter, word, previousRow, results, maxCost, maxResult
 
     # if any entries in the row are less than the maximum cost, then 
     # recursively search each branch of the trie
-    if min( currentRow ) <= maxCost:
+    if min(currentRow) <= maxCost:
         for letter in node.children:
             if searchRecursive(node.children[letter], letter, word, currentRow, 
                 results, maxCost, maxResults, resultCount):
@@ -176,6 +177,10 @@ class LoadDictionary(Resource):
         args = parser.parse_args()
 
         dict_url = args["dictionary_url"]
+
+        if not dict_url:
+            abort(404, message="Dictionary not provided. Post to /dictionary with dictionary_url in your query. Then retry this endpoint.")
+
         data = urllib.request.urlopen(dict_url).read().decode('utf-8')
         data = data.split("\n")
         
@@ -198,6 +203,10 @@ class NearestWord(Resource):
         word = args["word"]
         delta = args["delta"]
         number = args["number"]
+
+        # query validation
+        if not word or not delta or not number:
+            abort(404, message="Missing a key. Please make sure these 3 parameters exist: word, delta, and number.")
         
         # nearest = bruteNearestWord(word, int(delta), int(number))
         nearest = search(word, int(delta), int(number)) 
@@ -210,7 +219,7 @@ class NearestWord(Resource):
         response.status_code = 200 
         return response
 
-# Api resource routing
+# API resource routing
 api.add_resource(LoadDictionary, '/dictionary')
 api.add_resource(NearestWord, '/nearestWord')
 
