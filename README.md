@@ -7,7 +7,8 @@ will run in localhost on port 7777
 
 And from postman you can send it API requests:
 # API 1: Takes in a link for the dictionary file and loads it into the memory. 
-POST http://127.0.0.1:7777/dictionary?dictionary_url=https://raw.githubusercontent.com/dwyl/english-words/master/words.txt 
+POST http://127.0.0.1:7777/dictionary?dictionary_url=https://raw.githubusercontent.com/dwyl/english-words/master/words.txt
+
 Expected output:
 {
     "loaded_dictionary_url": "https://raw.githubusercontent.com/dwyl/english-words/master/words.txt"
@@ -15,6 +16,7 @@ Expected output:
 
 # API 2: Takes in 3 parameters: word, delta, and number to generate a list of response words.
 GET http://127.0.0.1:7777/nearestWord?word=car&delta=1&number=5 
+
 Expected output:
 {
     "found_number_words": true,
