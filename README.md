@@ -13,16 +13,15 @@ GET http://127.0.0.1:7777/nearestWord?word=car&delta=1&number=5
 
 Notes while implementing:
 
-''' Ideas for word generation:
+Ideas for word generation:
     1) leveistein automata, modify to find exact n away. Or use this to prune the search space. 
     2) graph representation, where weight of edge is edit distance - graph generation is expensive, calculation from there is cheaper. 
     What if input word is not in the given dictionary? Find closest word based on edit distance.
     3) range based, sort input accoridng to length. Proof of correctness: 
     4) brute force: for every word in dictionary, calculate edit distance. Terminate early if we got 'number' amount of words delta edit distance away from intput 'word'
     5) Use brute force to test correctness of improved solution
-'''
 
-''' Assumptions for design:
+Assumptions for design:
     1) Global dictionary, uploading new dictionary will overrite previous dictionary.
     2) Assuming that case does not matter-convert dictionary and input word to lower case. 
     3) Assuming finding nearest words (API 2), will be called more often than load dictionary (API 1). So, we can optimize design for API 2.
@@ -30,9 +29,8 @@ Notes while implementing:
     5) Single threaded.
     6) If we can not find enough number of words exactly delta away from input word, API 2 returns how many ever possible, with a flag (found_number_words) to indicate if it found required matches (true if it did).
     7) nearest words returned are in alphabetical ordering
-'''
 
-''' Performance breakdown:
+Performance breakdown:
     Brute force solution: According to the source code for the editdistance library that I am use (https://github.com/aflc/editdistance/blob/master/editdistance/_editdistance.cpp), 
     for the worst case input they use edit_distance_dp, which is the dynamic programming way to solve edit ditstance. Which has a time complexity and space complexity of
     O(m*n). Where m and n are the strings being compared. In the worst case the bruteNearestWord method will go over all dictionary words, lets say d. So our time complexiy would 
@@ -44,4 +42,3 @@ Notes while implementing:
     Using a trie to store our dictionary, all shared prefixes in the dictionary are collaped into a single path,
     so we can process them in the best order for building up the levenshtein tables one row at a time.
     The upper bound for the runtime is O(<max word length> * <number of nodes in the trie>). 
-'''
