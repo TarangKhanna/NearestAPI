@@ -24,6 +24,8 @@ import editdistance # used for brute force solution
     5) Single threaded.
     6) If we can not find enough number of words exactly delta away from input word, API 2 returns how many ever possible, with a flag (found_number_words) to indicate if it found required matches (true if it did).
     7) nearest words returned are in alphabetical ordering
+    8) space is counted as a character, so if we have "car " as input, with delta 1, 
+    our output can have "car" as 1 edit distance away
 '''
 
 ''' Performance breakdown:
