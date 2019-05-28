@@ -7,7 +7,7 @@ will run in localhost on port 7777
 
 # API requests:
 
-API 1: Takes in a link for the dictionary file and loads it into the memory. 
+API 1: 
 POST http://127.0.0.1:7777/dictionary?dictionary_url=https://raw.githubusercontent.com/dwyl/english-words/master/words.txt
 
 Expected output:
@@ -15,7 +15,7 @@ Expected output:
     "loaded_dictionary_url": "https://raw.githubusercontent.com/dwyl/english-words/master/words.txt"
 }
 
-API 2: Takes in 3 parameters: word, delta, and number to generate a list of response words.
+API 2: 
 GET http://127.0.0.1:7777/nearestWord?word=car&delta=1&number=5 
 
 Expected output:
