@@ -8,8 +8,24 @@ will run in localhost on port 7777
 And from postman you can send it API requests:
 # API 1: Takes in a link for the dictionary file and loads it into the memory. 
 POST http://127.0.0.1:7777/dictionary?dictionary_url=https://raw.githubusercontent.com/dwyl/english-words/master/words.txt 
+Expected output:
+{
+    "loaded_dictionary_url": "https://raw.githubusercontent.com/dwyl/english-words/master/words.txt"
+}
+
 # API 2: Takes in 3 parameters: word, delta, and number to generate a list of response words.
 GET http://127.0.0.1:7777/nearestWord?word=car&delta=1&number=5 
+Expected output:
+{
+    "found_number_words": true,
+    "list_of_words": [
+        "aar",
+        "ar",
+        "bar",
+        "ca",
+        "ca'"
+    ]
+}
 
 Notes while implementing:
 
@@ -29,6 +45,8 @@ Assumptions for design:
     5) Single threaded.
     6) If we can not find enough number of words exactly delta away from input word, API 2 returns how many ever possible, with a flag (found_number_words) to indicate if it found required matches (true if it did).
     7) nearest words returned are in alphabetical ordering
+    8) space is counted as a character, so if we have "car " as input, with delta 1, 
+    our output can have "car" as 1 edit distance away
 
 Performance breakdown:
     Brute force solution: According to the source code for the editdistance library that I am use (https://github.com/aflc/editdistance/blob/master/editdistance/_editdistance.cpp), 
