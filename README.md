@@ -1,11 +1,11 @@
 # WordGeneratorAPI
 API to generate nearest words based on provided dictionary.
 
-# To run in command line:
+# Run
 python core.py 
 will run in localhost on port 7777
 
-# API requests:
+# API requests
 
 API 1: 
 POST http://127.0.0.1:7777/dictionary?dictionary_url=https://raw.githubusercontent.com/dwyl/english-words/master/words.txt
@@ -30,7 +30,7 @@ Expected output:
     ]
 }
 
-# Notes:
+# Notes
 
 Ideas for word generation:
     1) leveistein automata, modify to find exact n away. Or use this to prune the search space. 
