@@ -4,6 +4,8 @@ API to generate nearest words based on provided dictionary.
 # Run
 I tested using Python 3.7.3 
 
+pip install -r requirements.txt
+
 python core.py 
 
 will run in localhost on port 7777
