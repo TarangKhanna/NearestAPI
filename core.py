@@ -5,7 +5,7 @@ from flask_jsonpify import jsonify
 import urllib.request  
 
 # fast edit distance library, implemented in c++ for speed.
-import editdistance # used for brute force solution
+# import editdistance # used for brute force solution
 
 ''' Ideas for word generation:
     1) leveistein automata, modify to find exact n away. Or use this to prune the search space. 
