@@ -2,8 +2,25 @@
 API to generate nearest words based on provided dictionary.
 
 # Run
+I tested using Python 3.7.3 
 python core.py 
 will run in localhost on port 7777
+
+pip freeze output:
+
+aniso8601==6.0.0
+certifi==2019.3.9
+Click==7.0
+editdistance==0.5.3
+Flask==1.0.3
+Flask-Jsonpify==1.5.0
+Flask-RESTful==0.3.7
+itsdangerous==1.1.0
+Jinja2==2.10.1
+MarkupSafe==1.1.1
+pytz==2019.1
+six==1.12.0
+Werkzeug==0.15.4
 
 # API requests
 
