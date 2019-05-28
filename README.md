@@ -33,6 +33,7 @@ Expected output:
 # Notes
 
 Ideas for word generation:
+
     1) leveistein automata, modify to find exact n away. Or use this to prune the search space. 
     2) graph representation, where weight of edge is edit distance - graph generation is expensive, calculation from there is cheaper. 
     What if input word is not in the given dictionary? Find closest word based on edit distance.
@@ -41,6 +42,7 @@ Ideas for word generation:
     5) Use brute force to test correctness of improved solution
 
 Assumptions for design:
+
     1) Global dictionary, uploading new dictionary will overrite previous dictionary.
     2) Assuming that case does not matter-convert dictionary and input word to lower case. 
     3) Assuming finding nearest words (API 2), will be called more often than load dictionary (API 1). So, we can optimize design for API 2.
@@ -52,6 +54,7 @@ Assumptions for design:
     our output can have "car" as 1 edit distance away
 
 Performance breakdown:
+
     Brute force solution: According to the source code for the editdistance library that I am use (https://github.com/aflc/editdistance/blob/master/editdistance/_editdistance.cpp), 
     for the worst case input they use edit_distance_dp, which is the dynamic programming way to solve edit ditstance. Which has a time complexity and space complexity of
     O(m*n). Where m and n are the strings being compared. In the worst case the bruteNearestWord method will go over all dictionary words, lets say d. So our time complexiy would 
